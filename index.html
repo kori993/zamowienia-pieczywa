@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zamówienia Pieczywa</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .product { margin-bottom: 15px; }
+    .error { color: red; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <h1>Zamówienia Pieczywa</h1>
+  <form id="orderForm">
+    <div>
+      <label>Imię i nazwisko:</label>
+      <input type="text" id="name" required>
+    </div>
+    <div>
+      <label>Numer telefonu:</label>
+      <input type="tel" id="phone" required>
+    </div>
+    <div>
+      <label>Dzień tygodnia:</label>
+      <select id="day" required>
+        <option value="Poniedziałek">Poniedziałek</option>
+        <option value="Wtorek">Wtorek</option>
+        <option value="Środa">Środa</option>
+        <!-- Dodaj kolejne dni -->
+      </select>
+    </div>
+    <div class="product">
+      <label>Chleb pszenny (dostępne: <span id="breadAvailability">50</span>):</label>
+      <input type="number" id="breadQty" min="0" value="0">
+      <span class="error" id="breadError"></span>
+    </div>
+    <div class="product">
+      <label>Bułka maślana (dostępne: <span id="rollAvailability">30</span>):</label>
+      <input type="number" id="rollQty" min="0" value="0">
+      <span class="error" id="rollError"></span>
+    </div>
+    <button type="submit">Złóż zamówienie</button>
+  </form>
+  <div id="confirmation" style="display:none; margin-top: 20px;"></div>
+
+  <script>
+    // Przykładowe dane o dostępności
+    const availability = {
+      bread: { Poniedziałek: 50, Wtorek: 40 },
+      roll: { Poniedziałek: 30, Wtorek: 20 },
+    };
+
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const day = document.getElementById('day').value;
+      const breadQty = parseInt(document.getElementById('breadQty').value) || 0;
+      const rollQty = parseInt(document.getElementById('rollQty').value) || 0;
+
+      let valid = true;
+
+      // Sprawdzenie dostępności chleba
+      if (breadQty > availability.bread[day]) {
+        document.getElementById('breadError').textContent = "Brak wystarczającej ilości chleba.";
+        valid = false;
+      } else {
+        document.getElementById('breadError').textContent = "";
+      }
+
+      // Sprawdzenie dostępności bułek
+      if (rollQty > availability.roll[day]) {
+        document.getElementById('rollError').textContent = "Brak wystarczającej ilości bułek.";
+        valid = false;
+      } else {
+        document.getElementById('rollError').textContent = "";
+      }
+
+      // Jeśli wszystko OK
+      if (valid) {
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
+        document.getElementById('confirmation').style.display = "block";
+        document.getElementById('confirmation').textContent = 
+          `Dziękujemy za zamówienie, ${name}. Potwierdzenie wyślemy na Twój numer telefonu: ${phone}.`;
+      }
+    });
+  </script>
+</body>
+</html>
