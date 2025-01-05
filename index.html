@@ -43,22 +43,27 @@
 
     // Wysłanie danych do Google Apps Script
     fetch("https://script.google.com/macros/s/AKfycbxyg3hKxmWmOCX44nVIfSujY5z1AM6FgNCepqwRP949jS9umnXa0btBEmLQqGbRkxbB/exec", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-      if (result.status === "success") {
-        document.getElementById('confirmation').style.display = "block";
-        document.getElementById('confirmation').textContent = 
-          "Dziękujemy za zamówienie. Potwierdzenie zostało zapisane.";
-      } else {
-        alert("Wystąpił błąd: " + result.message);
-      }
-    })
-    .catch(error => {
-      alert("Nie udało się połączyć z serwerem.");
-    });
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+})
+.then(response => {
+  console.log("Odpowiedź serwera:", response);
+  return response.json();
+})
+.then(result => {
+  console.log("Wynik:", result);
+  if (result.status === "success") {
+    document.getElementById('confirmation').style.display = "block";
+    document.getElementById('confirmation').textContent = 
+      "Dziękujemy za zamówienie. Potwierdzenie zostało zapisane.";
+  } else {
+    alert("Wystąpił błąd: " + result.message);
+  }
+})
+.catch(error => {
+  console.error("Błąd połączenia:", error);
+  alert("Nie udało się połączyć z serwerem.");
+});
   });
 </script>
